@@ -6,7 +6,16 @@ config_list = [
         # Azure OpenAI deployments
         {
             "model": os.getenv("GPT4o_DEPLOYMENT_NAME"), 
-            "tags": ["gpt4o", "azure", "OpenAI", "big"], # autogen tags for filtering if multiple models are specified
+            "tags": ["gpt-4o", "azure", "OpenAI", "big"], # autogen tags for filtering if multiple models are specified
+            "api_key": os.getenv("AZURE_API_KEY"), 
+            "base_url": os.getenv("AZURE_DEPLOYMENT_ENDPOINT"), 
+            "api_type": "azure", 
+            "api_version": "2023-03-15-preview", # API VERSION != MODEL VERSION!!!!! Get from deployment targt in Azure AI Studio
+            "temperature": 0.2,
+        },        
+        {
+            "model": os.getenv("GPT4omini_DEPLOYMENT_NAME"), 
+            "tags": ["gpt-4o-mini", "azure", "OpenAI", "medium"], # autogen tags for filtering if multiple models are specified
             "api_key": os.getenv("AZURE_API_KEY"), 
             "base_url": os.getenv("AZURE_DEPLOYMENT_ENDPOINT"), 
             "api_type": "azure", 

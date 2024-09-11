@@ -79,8 +79,10 @@ def main():
                 st.session_state.repo_tokens = count_tokens(repo_content, "gpt-3.5-turbo-0613")  # Using a default model for token counting
                 st.sidebar.write(f"Repository tokens: {st.session_state.repo_tokens}")
 
-        model = st.selectbox("Model", ["Llama-3.1-8b", "Claude-3.0-Haiku", "Llama-3.1-70b", "gpt4o", "Claude-3.5-Sonnet"])
-        max_tokens = st.slider("Max tokens", 1, 4096, 2048)
+        #model = st.radio("Model", ["Claude-3.0-Haiku", "Claude-3.5-Sonnet", "Llama-3.1-8b", "Llama-3.1-70b", "gpt-4o-mini", "gpt-4o"])
+        model = st.radio("Model", ["Claude-3.0-Haiku", "Claude-3.5-Sonnet", "Llama-3.1-8b", "Llama-3.1-70b", "gpt-4o-mini", "gpt-4o"])
+        #model = st.selectbox("Model", ["Claude-3.0-Haiku", "Claude-3.5-Sonnet", "Llama-3.1-8b", "Llama-3.1-70b", "gpt-4o-mini", "gpt-4o"])
+        #max_tokens = st.slider("Max tokens", 1, 4096, 2048)
 
         if st.button("Clear messages"):
             st.session_state.messages = []
