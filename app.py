@@ -9,7 +9,11 @@ import time
 
 from config import config_list
 from ingest_repo import ingest_repository
-load_dotenv()
+
+# for image support
+from PIL import Image
+import io
+#load_dotenv()
 
 # --------------------------------------------
 # initialize autogen 
@@ -66,26 +70,25 @@ def format_usage_summary(prompt_tokens, completion_tokens, cost):
 # Streamlit app
 # --------------------------------------------
 def main():
-    #st.title("Repository Chat App")
+    load_dotenv()
 
     # Sidebar
     with st.sidebar:
         user_repo = st.text_input("Folder or GitHub repo", value="./repochat", key="user_repo")
-        
+
         if st.button("Ingest repo"):
             repo_content = ingest_repo_safely(user_repo)
             if repo_content:
                 st.session_state.repo_content = repo_content
-                st.session_state.repo_tokens = count_tokens(repo_content, "gpt-3.5-turbo-0613")  # Using a default model for token counting
+                st.session_state.repo_tokens = count_tokens(repo_content, "gpt-3.5-turbo-0613")
                 st.sidebar.write(f"Repository tokens: {st.session_state.repo_tokens}")
 
-        #model = st.radio("Model", ["Claude-3.0-Haiku", "Claude-3.5-Sonnet", "Llama-3.1-8b", "Llama-3.1-70b", "gpt-4o-mini", "gpt-4o"])
         model = st.radio("Model", ["Claude-3.0-Haiku", "Claude-3.5-Sonnet", "Llama-3.1-8b", "Llama-3.1-70b", "gpt-4o-mini", "gpt-4o"])
-        #model = st.selectbox("Model", ["Claude-3.0-Haiku", "Claude-3.5-Sonnet", "Llama-3.1-8b", "Llama-3.1-70b", "gpt-4o-mini", "gpt-4o"])
-        #max_tokens = st.slider("Max tokens", 1, 4096, 2048)
 
         if st.button("Clear messages"):
             st.session_state.messages = []
+            st.session_state.repo_content = ""  # Clear repo content
+            st.session_state.repo_tokens = 0  # Clear repo tokens
             log_message("Conversation cleared")
 
     # Initialize session state
@@ -98,7 +101,6 @@ def main():
     if "agent" not in st.session_state:
         st.session_state.agent = None
 
-
     # System prompt
     system_prompt = f"""
     You are a highly skilled python developer and machine learning specialist. 
@@ -107,7 +109,7 @@ def main():
     included after a structure of the entire repo and its folders and files in the information shared with you below. 
     File paths will be included before each snippet following the format: 
     --- ./dummy_repo/src/more.py --- 
-    
+
     # Repo content 
     {st.session_state.repo_content}
     """
@@ -123,11 +125,11 @@ def main():
     # Chat input
     if prompt := st.chat_input():
         start_time = time.time()  # Start timing
-        
+
         try:
             filter_dict = {"tags": [model]}
             filtered_cl = [config for config in config_list if model in config.get("tags", [])]
-            
+
             if not filtered_cl:
                 st.error(f"No configuration found for model: {model}")
                 return
@@ -144,7 +146,7 @@ def main():
             reply = get_reply(st.session_state.agent, messages)
 
             completion_tokens = count_tokens(reply, model)
-            
+
             end_time = time.time()  # End timing
             response_time = end_time - start_time
 
@@ -169,7 +171,7 @@ def main():
             st.chat_message("assistant").write(reply)
             st.text(f"Response time: {response_time:.2f} seconds")
             st.text(usage_summary)
-            
+
             log_message(f"User: {prompt}")
             log_message(f"Assistant: {reply}")
             log_message(f"Response time: {response_time:.2f} seconds")
