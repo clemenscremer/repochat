@@ -74,7 +74,7 @@ def main():
 
     # Sidebar
     with st.sidebar:
-        user_repo = st.text_input("Folder or GitHub repo", value="./repochat", key="user_repo")
+        user_repo = st.text_input("Folder or GitHub repo", value="./GNN", key="user_repo")
 
         if st.button("Ingest repo"):
             repo_content = ingest_repo_safely(user_repo)
@@ -83,7 +83,7 @@ def main():
                 st.session_state.repo_tokens = count_tokens(repo_content, "gpt-3.5-turbo-0613")
                 st.sidebar.write(f"Repository tokens: {st.session_state.repo_tokens}")
 
-        model = st.radio("Model", ["Claude-3.0-Haiku", "Claude-3.5-Sonnet", "Llama-3.1-8b", "Llama-3.1-70b", "gpt-4o-mini", "gpt-4o"])
+        model = st.radio("Model", ["Claude-3.5-Haiku", "Claude-3.0-Haiku", "Claude-3.5-Sonnet", "Llama-3.1-8b", "Llama-3.1-70b", "gpt-4o-mini", "gpt-4o"])
 
         if st.button("Clear messages"):
             st.session_state.messages = []

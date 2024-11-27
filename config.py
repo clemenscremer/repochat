@@ -49,7 +49,7 @@ config_list = [
         },
         # Anthropic deployments
         {
-            "model": "claude-3-5-sonnet-20240620",
+            "model": "claude-3-5-sonnet-latest",
             "tags": ["Claude-3.5-Sonnet", "Sonnet", "Anthropic", "medium"],
             "api_key": os.getenv("ANTHROPIC_API_KEY"), 
             "api_type": "anthropic",
@@ -65,6 +65,17 @@ config_list = [
             "temperature": 0.2,
             #"top_p": 0.2, # Note: It is recommended to set temperature or top_p but not both.
             #"max_tokens": 2048,
-        }
+        },
+        {
+            "model": "claude-3-5-haiku-latest",
+            "tags": ["Claude-3.5-Haiku", "Haiku", "Anthropic", "small"],
+            "api_key": os.getenv("ANTHROPIC_API_KEY"), 
+            "api_type": "anthropic",
+            "temperature": 0.2,
+            #"top_p": 0.2, # Note: It is recommended to set temperature or top_p but not both.
+            #"max_tokens": 2048,
+        },        
+
+
 
     ]
